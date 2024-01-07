@@ -4,6 +4,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.*;
 import java.net.*;
+
 public class Main {
     public static int option() {
         int i = 0;
@@ -60,6 +61,7 @@ public class Main {
         System.out.format("%s %n",thisSource.program);
     }
 
+
     public static String selectURL(source thisURL){
         return thisURL.URL;
     }
@@ -68,6 +70,7 @@ public class Main {
         //merge this into selectURL?
         return thisFilename.program;
     }
+
 
     public static void main(String[] args) {
         System.out.format(" Package Manager %n 0) Install Package %n 1) Remove Package %n 2) exit %n");
@@ -88,7 +91,6 @@ public class Main {
             source thisFilename = thisList.get(urlselected);
             String fileName = programFileName(thisFilename);
             Download(url, fileName);
-
 
         } else if (selected == 1) {
             System.out.format("temporary");
