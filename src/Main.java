@@ -4,7 +4,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.*;
 import java.net.*;
-
+import org.apache.commons.io.FileUtils;
 public class Main {
     public static int option() {
         int i = 0;
@@ -72,6 +72,11 @@ public class Main {
     }
 
 
+    public static int countItemsInFolder(){
+        String username = System.getProperty("user.name");
+        return Objects.requireNonNull(new File("/users/" + username + "/Documents/Packages/").list()).length;
+    }
+
     public static void main(String[] args) {
         System.out.format(" Package Manager %n 0) Install Package %n 1) Remove Package %n 2) exit %n");
 
@@ -93,7 +98,17 @@ public class Main {
             Download(url, fileName);
 
         } else if (selected == 1) {
-            System.out.format("temporary");
+
+            System.out.format("%d) Delete everything in Packages folder %n", (countItemsInFolder() + 1));
+            int deleteSelected = option();
+            if (deleteSelected == (countItemsInFolder() + 1)) {
+                System.out.println("test");
+                String username = System.getProperty("user.name");
+
+                File directory = new File("/users/"+username+"/Documents/Packages/");
+
+            }
+
 
         } else {
             System.exit(0);
