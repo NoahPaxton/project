@@ -1,3 +1,5 @@
+//Add boolean
+//Continue execution after an error is thrown
 import org.apache.commons.io.FileUtils;
 
 import java.io.*;
@@ -10,6 +12,9 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Main {
+
+
+
     public static int option() {
         int i = 0;
         Scanner input = new Scanner(System.in);
@@ -27,15 +32,14 @@ public class Main {
         return valueint;
     }
 
-    public static void Download(String url, String fileName) {
+    public static void Download(String url, String fileName, String UserName) {
         try {
             //URL is deprecated and URI should be used now however this is complex, so I will just leave it as URL for now.
             InputStream in = new URL(url).openStream();
-            String username = System.getProperty("user.name");
             // add support for files other than .exe?
-            Files.copy(in, Paths.get("/users/"+username+"/Documents/Packages/" + fileName + ".exe"), StandardCopyOption.REPLACE_EXISTING);
+            Files.copy(in, Paths.get("/users/"+UserName+"/Documents/Packages/" + fileName + ".exe"), StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            System.out.println("There was an error downloading the file, please try again.");
         }
 
     }
@@ -76,25 +80,21 @@ public class Main {
     }
 
 
-    public static int countItemsInFolder(){
-        String username = System.getProperty("user.name");
-        return Objects.requireNonNull(new File("/users/" + username + "/Documents/Packages/").list()).length;
+    public static int countItemsInFolder(String UserName){
+        return Objects.requireNonNull(new File("/users/" + UserName + "/Documents/Packages/").list()).length;
     }
 
-    public static void DeleteFiles(){
-        String username = System.getProperty("user.name");
-
+    public static void DeleteFiles(String UserName){
         try {
-            FileUtils.cleanDirectory(new File("/users/" + username + "/Documents/Packages"));
+            FileUtils.cleanDirectory(new File("/users/" + UserName + "/Documents/Packages"));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
 
-    public static List<String> FileNames() {
-        String username = System.getProperty("user.name");
-            return Stream.of(Objects.requireNonNull(new File("/users/" + username + "/Documents/Packages/").listFiles()))
+    public static List<String> FileNames(String UserName) {
+            return Stream.of(Objects.requireNonNull(new File("/users/" + UserName + "/Documents/Packages/").listFiles()))
                     .map(File::getName)
                     .collect(Collectors.toList());
     }
@@ -103,6 +103,7 @@ public class Main {
 
 
     public static void main(String[] args) {
+        String UserName = System.getProperty("user.name");
         System.out.format(" Package Manager %n 0) Install Package %n 1) Remove Package and/or files %n 2) exit %n");
 
         ArrayList<source> thisList = loadFile("Sources.txt");
@@ -120,22 +121,31 @@ public class Main {
             String url = selectURL(thisURL);
             source thisFilename = thisList.get(urlselected);
             String fileName = programFileName(thisFilename);
-            Download(url, fileName);
+            Download(url, fileName, UserName);
 
         } else if (selected == 1) {
 
-            for(int i=0;i<countItemsInFolder();i++) {
-                System.out.format("%n", FileNames().get(i));
-                //out of bounds
-
+            for(int i=0;i<=countItemsInFolder(UserName)-1;) {
+                System.out.format("%d) %s %n", (i + 1), FileNames(UserName).get(i));
+                i++;
             }
+            System.out.format("%d) Delete everything in Packages folder %n", (countItemsInFolder(UserName) + 1));
 
-
-            System.out.format("%d) Delete everything in Packages folder %n", (countItemsInFolder() + 1));
             int deleteSelected = option();
-            if (deleteSelected == (countItemsInFolder() + 1)) {
-               DeleteFiles();
+
+            if (deleteSelected == (countItemsInFolder(UserName) + 1)) {
+               DeleteFiles(UserName);
+               System.out.println("All files deleted");
+            } else {
+                String FileNameToDelete = FileNames(UserName).get(deleteSelected-1);
+                try {
+                    FileUtils.delete(new File("/users/vm/Documents/Packages/" + FileNameToDelete));
+                } catch (IOException e) {
+                    System.out.println("There was an error finding the selected file");
+                }
+
             }
+
 
 
         } else {
