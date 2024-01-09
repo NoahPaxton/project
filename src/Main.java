@@ -6,6 +6,9 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 public class Main {
     public static int option() {
         int i = 0;
@@ -89,24 +92,12 @@ public class Main {
     }
 
 
-    public static ArrayList<FilesInFolder> FileNames() {
-        List<String> FileNamesFound;
-        ArrayList<FilesInFolder> FileList = new ArrayList<>();
-        String list = java.io.File.list(FilenameFilter);
-
-
-
+    public static List<String> FileNames() {
         String username = System.getProperty("user.name");
-        try {
-            Files.list(Paths.get("/users/"+username+"/Documents/Packages"));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-
+            return Stream.of(Objects.requireNonNull(new File("/users/" + username + "/Documents/Packages/").listFiles()))
+                    .map(File::getName)
+                    .collect(Collectors.toList());
     }
-
-
 
 
 
@@ -132,6 +123,13 @@ public class Main {
             Download(url, fileName);
 
         } else if (selected == 1) {
+
+            for(int i=0;i<countItemsInFolder();i++) {
+                System.out.format("%n", FileNames().get(i));
+                //out of bounds
+
+            }
+
 
             System.out.format("%d) Delete everything in Packages folder %n", (countItemsInFolder() + 1));
             int deleteSelected = option();
