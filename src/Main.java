@@ -1,10 +1,11 @@
+import org.apache.commons.io.FileUtils;
+
 import java.io.*;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.*;
-import java.net.*;
-import org.apache.commons.io.FileUtils;
 public class Main {
     public static int option() {
         int i = 0;
@@ -77,8 +78,41 @@ public class Main {
         return Objects.requireNonNull(new File("/users/" + username + "/Documents/Packages/").list()).length;
     }
 
+    public static void DeleteFiles(){
+        String username = System.getProperty("user.name");
+
+        try {
+            FileUtils.cleanDirectory(new File("/users/" + username + "/Documents/Packages"));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+    public static ArrayList<FilesInFolder> FileNames() {
+        List<String> FileNamesFound;
+        ArrayList<FilesInFolder> FileList = new ArrayList<>();
+        String list = java.io.File.list(FilenameFilter);
+
+
+
+        String username = System.getProperty("user.name");
+        try {
+            Files.list(Paths.get("/users/"+username+"/Documents/Packages"));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+
+    }
+
+
+
+
+
+
     public static void main(String[] args) {
-        System.out.format(" Package Manager %n 0) Install Package %n 1) Remove Package %n 2) exit %n");
+        System.out.format(" Package Manager %n 0) Install Package %n 1) Remove Package and/or files %n 2) exit %n");
 
         ArrayList<source> thisList = loadFile("Sources.txt");
 
@@ -102,11 +136,7 @@ public class Main {
             System.out.format("%d) Delete everything in Packages folder %n", (countItemsInFolder() + 1));
             int deleteSelected = option();
             if (deleteSelected == (countItemsInFolder() + 1)) {
-                System.out.println("test");
-                String username = System.getProperty("user.name");
-
-                File directory = new File("/users/"+username+"/Documents/Packages/");
-
+               DeleteFiles();
             }
 
 
