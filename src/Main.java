@@ -234,10 +234,10 @@ public class Main {
             } else if (selected == 1) {
                 // section that handles removing packages
                 for(int i=0;i<=countItemsInFolder(UserName)-1;) {
-                    System.out.format("%d) %s %n", (i + 1), FileNames(UserName).get(i));
+                    System.out.format("%d) %s %n", (i), FileNames(UserName).get(i));
                     i++;
                 }
-                System.out.format("%d) Delete everything in Packages folder %n", (countItemsInFolder(UserName) + 1));
+                System.out.format("%d) Delete everything in Packages folder %n", (countItemsInFolder(UserName)));
 
                 int deleteSelected = option(out, Errors, LogErrors);
 
@@ -245,15 +245,14 @@ public class Main {
                     // deletes entire contents of packages folder
                     DeleteFiles(UserName, out, Errors, LogErrors);
                     System.out.println("All files deleted");
-                    out.write("All files deleted successfully");
+                    out.write("All files deleted successfully \n \n \n ");
                     out.newLine();
-                    System.out.println("\n \n \n ");
                 } else {
-                    String FileNameToDelete = FileNames(UserName).get(deleteSelected-1);
+                    String FileNameToDelete = FileNames(UserName).get(deleteSelected);
                         // deletes file selected
                         try {
                             FileUtils.delete(new File("/users/"+UserName+"/Documents/Packages/" + FileNameToDelete));
-                            System.out.println(FileNameToDelete + " Deleted successfully");
+                            System.out.println(FileNameToDelete + " Deleted successfully \n \n \n ");
                             out.write(FileNameToDelete + " Deleted successfully");
                             out.newLine();
                         } catch (IOException e) {
