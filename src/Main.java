@@ -244,8 +244,8 @@ public class Main {
                 if (deleteSelected == (countItemsInFolder(UserName))) {
                     // deletes entire contents of packages folder
                     DeleteFiles(UserName, out, Errors, LogErrors);
-                    System.out.println("All files deleted");
-                    out.write("All files deleted successfully \n \n \n ");
+                    System.out.println("All files deleted \n \n \n");
+                    out.write("All files deleted successfully");
                     out.newLine();
                 } else {
                     String FileNameToDelete = FileNames(UserName).get(deleteSelected);
