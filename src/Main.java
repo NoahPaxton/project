@@ -31,7 +31,7 @@ public class Main {
         return valueint;
     }
 
-    public static void Download(String url, String fileName, String UserName, PrintWriter out, String[] Errors, String[] LogErrors) {
+    public static void Download(String url, String fileName, String UserName, PrintWriter out, String[] Errors, String[] LogErrors) throws RuntimeException {
         // This will download the file from the url passed through and name the file after the filename passed through.
         // Files must be an exe since it appeneds .exe to the end of the filename so it is executable.
         boolean i = true;
