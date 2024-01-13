@@ -206,7 +206,6 @@ public class Main {
                 source thisFilename = thisList.get(urlselected);
                 String fileName = programFileName(thisFilename);
                 Download(url, fileName, UserName, out, Errors, LogErrors);
-                System.out.println("Download completed successfully");
                 System.out.println("\n \n \n ");
                 out.close();
             } else if (selected == 1) {
