@@ -241,7 +241,7 @@ public class Main {
 
                 int deleteSelected = option(out, Errors, LogErrors);
 
-                if (deleteSelected == (countItemsInFolder(UserName) + 1)) {
+                if (deleteSelected == (countItemsInFolder(UserName))) {
                     // deletes entire contents of packages folder
                     DeleteFiles(UserName, out, Errors, LogErrors);
                     System.out.println("All files deleted");
