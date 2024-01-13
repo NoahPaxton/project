@@ -1,5 +1,7 @@
 // Add comments
+
 import org.apache.commons.io.FileUtils;
+
 import java.io.*;
 import java.net.URL;
 import java.nio.file.Files;
@@ -11,7 +13,7 @@ import java.util.stream.Stream;
 
 public class Main {
 
-    public static int option(PrintWriter out, String[] Errors) {
+    public static int option(PrintWriter out, String[] Errors, String[] LogErrors) {
         // This will ask the user for an input and validate it before returing it
         boolean i = true;
         Scanner input = new Scanner(System.in);
@@ -23,13 +25,13 @@ public class Main {
                 i=false;
             } catch (NumberFormatException e) {
                 System.out.println(Errors[5] + e.toString());
-                out.println("Incorrect Input Error "+ e.toString());
+                out.println( LogErrors[1]+ e.toString());
             }
         }
         return valueint;
     }
 
-    public static void Download(String url, String fileName, String UserName, PrintWriter out, String[] Errors) {
+    public static void Download(String url, String fileName, String UserName, PrintWriter out, String[] Errors, String[] LogErrors) {
         // This will download the file from the url passed through and name the file after the filename passed through.
         // Files must be an exe since it appeneds .exe to the end of the filename so it is executable.
         boolean i = true;
@@ -44,14 +46,15 @@ public class Main {
                 i = false;
             } catch (IOException e) {
                 System.out.println(Errors[4] + e.toString());
-                out.println("Error while downloading file "+ e.toString());
+                out.println(LogErrors[3] + e.toString());
             }
         }
 
 
     }
 
-    public static ArrayList<source> loadFile(String filename, PrintWriter out, String[] Errors) {
+    public static ArrayList<source> loadFile(String filename, PrintWriter out, String[] Errors, String[] LogErrors) {
+        // This loads the sources file into an arraylist.
         List<String> SourceDetails;
         ArrayList<source> thisList = new ArrayList<>();
         boolean i = true;
@@ -71,7 +74,7 @@ public class Main {
                 i = false;
             } catch (IOException e) {
                 System.out.println(Errors[3] + e.toString());
-                out.println("Error while loading sources file. Please Make sure it exists. " + e.toString());
+                out.println( LogErrors[4] + e.toString());
             }
         }
 
@@ -97,7 +100,7 @@ public class Main {
         return Objects.requireNonNull(new File("/users/" + UserName + "/Documents/Packages/").list()).length;
     }
 
-    public static void DeleteFiles(String UserName, PrintWriter out, String[] Errors){
+    public static void DeleteFiles(String UserName, PrintWriter out, String[] Errors, String[] LogErrors){
         boolean i = true;
         while (i==true) {
             try {
@@ -105,7 +108,7 @@ public class Main {
                 i = false;
             } catch (IOException e) {
                 System.out.println( Errors[2] + e.toString());
-                out.println("Error deleting folder. It might not exist. "+ e.toString());
+                out.println( LogErrors[0] + e.toString());
             }
         }
 
@@ -119,12 +122,48 @@ public class Main {
     }
 
 
+    public static void CreatePackagesDirectory (String UserName) {
+        File directory = new File("/users/" + UserName + "/Documents/Packages/");
+        if (!directory.exists()) {
+            directory.mkdir();
+        }
+    }
+
+    public static void CreateDefaultSources (String[] Errors, PrintWriter out, String[] LogErrors) {
+        File sources = new File("Sources.txt");
+        if (!sources.exists()) {
+            try {
+                sources.createNewFile();
+                BufferedWriter defaultSources = new BufferedWriter(new FileWriter("Sources.txt"));
+                defaultSources.write("Rufus,https://github.com/pbatard/rufus/releases/download/v4.3/rufus-4.3.exe\n" +
+                        "Discord,https://github.com/portapps/discord-portable/releases/download/1.0.9028-17/discord-portable-win32.exe\n" +
+                        "7zipconsole,https://www.7-zip.org/a/7zr.exe\n" +
+                        "alacritty,https://github.com/alacritty/alacritty/releases/download/v0.13.1/Alacritty-v0.13.1-portable.exe\n" +
+                        "steamrommanager,https://github.com/SteamGridDB/steam-rom-manager/releases/download/v2.4.17/Steam-ROM-Manager-portable-2.4.17.exe");
+                defaultSources.close();
+            } catch (IOException e) {
+                System.out.println( Errors[2] + e.toString());
+                out.println( LogErrors[0] + e.toString());
+            }
+
+        }
+
+    }
+
 
 
     public static void main(String[] args) throws IOException {
         String[] Errors = {"File Wasn't Found. or there was an error parsing the timesRan file. make sure timesRan only contains an integer or delete the timesRan file(s) ",
                 "There was an error finding the selected file ","Folder could not be deleted. it may not exist ", "Error occurred reading file. Please make sure the file structure is correct.",
                 "There was an error downloading the file, please try again. ", "input was incorrect, please try again.  "};
+
+
+        String[] LogErrors = {"Error deleting folder. It might not exist. ","Incorrect Input Error ","File wasn't found. ","Error while downloading file ", "Error while loading sources file. Please Make sure it exists. "};
+
+        String UserName = System.getProperty("user.name");
+
+
+
 
         PrintWriter out = null;
         boolean pwloop = true;
@@ -145,24 +184,26 @@ public class Main {
                 System.out.println(Errors[0]);
             }
         }
-        String UserName = System.getProperty("user.name");
-        ArrayList<source> thisList = loadFile("Sources.txt", out, Errors);
+        CreatePackagesDirectory(UserName);
+        CreateDefaultSources(Errors, out, LogErrors);
+
+        ArrayList<source> thisList = loadFile("Sources.txt", out, Errors, LogErrors);
         boolean executeprogram = true;
         while (executeprogram==true) {
             System.out.format(" Package Manager %n 0) Install Package %n 1) Remove Package and/or files %n 2) exit %n");
-            int selected = option(out, Errors);
+            int selected = option(out, Errors, LogErrors);
             if (selected == 0) {
                 for(int i=0;i<thisList.size();i++) {
                     source thisSource = thisList.get(i);
                     displaySource(thisSource);
                 }
 
-                int urlselected = option(out, Errors);
+                int urlselected = option(out, Errors, LogErrors);
                 source thisURL = thisList.get(urlselected);
                 String url = selectURL(thisURL);
                 source thisFilename = thisList.get(urlselected);
                 String fileName = programFileName(thisFilename);
-                Download(url, fileName, UserName, out, Errors);
+                Download(url, fileName, UserName, out, Errors, LogErrors);
                 System.out.println("Download completed successfully");
                 Runtime.getRuntime().exec("cls");
                 out.close();
@@ -174,10 +215,10 @@ public class Main {
                 }
                 System.out.format("%d) Delete everything in Packages folder %n", (countItemsInFolder(UserName) + 1));
 
-                int deleteSelected = option(out, Errors);
+                int deleteSelected = option(out, Errors, LogErrors);
 
                 if (deleteSelected == (countItemsInFolder(UserName) + 1)) {
-                    DeleteFiles(UserName, out, Errors);
+                    DeleteFiles(UserName, out, Errors, LogErrors);
                     System.out.println("All files deleted");
                     out.println("All files deleted successfully");
                     out.close();
@@ -190,7 +231,7 @@ public class Main {
                             System.out.println(FileNameToDelete + " Deleted successfully");
                         } catch (IOException e) {
                             System.out.println(Errors[1] + e.toString());
-                            out.println("File wasn't found. " + e.toString());
+                            out.println(LogErrors[2] + e.toString());
                         }
                     }
 

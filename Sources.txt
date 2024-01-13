@@ -1,3 +1,0 @@
-Rufus,https://github.com/pbatard/rufus/releases/download/v4.3/rufus-4.3.exe
-Example1,https://example1.example/example
-Example2,https://example2.example/example
