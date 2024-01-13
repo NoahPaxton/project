@@ -13,7 +13,7 @@ import java.util.stream.Stream;
 
 public class Main {
 
-    public static int option(PrintWriter out, String[] Errors, String[] LogErrors) {
+    public static int option(BufferedWriter out, String[] Errors, String[] LogErrors) throws IOException {
         // This will ask the user for an input and validate it before returing it
         boolean i = true;
         Scanner input = new Scanner(System.in);
@@ -25,13 +25,14 @@ public class Main {
                 i=false;
             } catch (NumberFormatException e) {
                 System.out.println(Errors[5] + e.toString());
-                out.println( LogErrors[1]+ e.toString());
+                out.write(LogErrors[1]+ e.toString());
+                out.newLine();
             }
         }
         return valueint;
     }
 
-    public static void Download(String url, String fileName, String UserName, PrintWriter out, String[] Errors, String[] LogErrors) throws RuntimeException {
+    public static void Download(String url, String fileName, String UserName, BufferedWriter out, String[] Errors, String[] LogErrors) throws RuntimeException, IOException {
         // This will download the file from the url passed through and name the file after the filename passed through.
         // Files must be an exe since it appeneds .exe to the end of the filename so it is executable.
         boolean i = true;
@@ -42,18 +43,19 @@ public class Main {
                 // add support for files other than .exe?
                 Files.copy(in, Paths.get("/users/"+UserName+"/Documents/Packages/" + fileName + ".exe"), StandardCopyOption.REPLACE_EXISTING);
                 System.out.println("Download of " +fileName+" completed successfully");
-                out.println("Download of " +fileName+" completed successfully");
+                out.write("Download of " +fileName+" completed successfully");
+                out.newLine();
                 i = false;
             } catch (IOException e) {
                 System.out.println(Errors[4] + e.toString());
-                out.println(LogErrors[3] + e.toString());
+                out.write(LogErrors[3] + e.toString());
+                out.newLine();
             }
         }
 
-
     }
 
-    public static ArrayList<source> loadFile(String filename, PrintWriter out, String[] Errors, String[] LogErrors) {
+    public static ArrayList<source> loadFile(String filename, BufferedWriter out, String[] Errors, String[] LogErrors) throws IOException {
         // This loads the sources file into an arraylist.
         List<String> SourceDetails;
         ArrayList<source> thisList = new ArrayList<>();
@@ -74,7 +76,8 @@ public class Main {
                 i = false;
             } catch (IOException e) {
                 System.out.println(Errors[3] + e.toString());
-                out.println( LogErrors[4] + e.toString());
+                out.write( LogErrors[4] + e.toString());
+                out.newLine();
             }
         }
 
@@ -97,7 +100,7 @@ public class Main {
         return Objects.requireNonNull(new File("/users/" + UserName + "/Documents/Packages/").list()).length;
     }
 
-    public static void DeleteFiles(String UserName, PrintWriter out, String[] Errors, String[] LogErrors){
+    public static void DeleteFiles(String UserName, BufferedWriter out, String[] Errors, String[] LogErrors) throws IOException {
         // This deletes all files and folders in the Packages folder
         boolean i = true;
         while (i==true) {
@@ -106,7 +109,8 @@ public class Main {
                 i = false;
             } catch (IOException e) {
                 System.out.println( Errors[2] + e.toString());
-                out.println( LogErrors[0] + e.toString());
+                out.write( LogErrors[0] + e.toString());
+                out.newLine();
             }
         }
 
@@ -129,7 +133,7 @@ public class Main {
         }
     }
 
-    public static void CreateDefaultSources (String[] Errors, PrintWriter out, String[] LogErrors) {
+    public static void CreateDefaultSources (String[] Errors, BufferedWriter out, String[] LogErrors) throws IOException {
         // This creates the default sources file if it doesnt exist.
         File sources = new File("Sources.txt");
         if (!sources.exists()) {
@@ -144,16 +148,47 @@ public class Main {
                 defaultSources.close();
             } catch (IOException e) {
                 System.out.println( Errors[2] + e.toString());
-                out.println( LogErrors[0] + e.toString());
+                out.write( LogErrors[0] + e.toString());
+                out.newLine();
             }
 
         }
 
     }
 
+    public static void CreatetimesRan (String[] Errors)  {
+        // This creates the timesRan file if it doesn't exist or adds to it.
+        File timesran = new File("timesRan.txt");
+        if (!timesran.exists()) {
+            try {
+                timesran.createNewFile();
+                BufferedWriter writetotimesran = new BufferedWriter(new FileWriter("timesRan.txt"));
+                writetotimesran.write("1");
+                writetotimesran.close();
+            } catch (IOException e) {
+                System.out.println( Errors[2] + e.toString());
+
+            }
+
+        } else if (timesran.exists()) {
+            try {
+                BufferedReader in = new BufferedReader(new FileReader("timesRan.txt"));
+                int line = Integer.parseInt(in.readLine());
+                BufferedWriter writetotimesran = new BufferedWriter(new FileWriter("timesRan.txt",false));
+                writetotimesran.write(String.valueOf((line) + 1 ));
+                writetotimesran.close();
 
 
-    public static void main(String[] args) {
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
+
+        }
+
+    }
+
+    public static void main(String[] args) throws IOException {
 
         // These arrays store error messages for errors printed to screen and errors written to the logs.txt file(s)
         String[] Errors = {"File Wasn't Found. or there was an error parsing the timesRan file. make sure timesRan only contains an integer or delete the timesRan file(s) ",
@@ -165,26 +200,16 @@ public class Main {
         // String that gets the username of the user
         String UserName = System.getProperty("user.name");
 
-        PrintWriter out = null;
-        boolean pwloop = true;
-        while (pwloop==true) {
-            try {
-                // exists so that the logs.txt file isn't overwritten on every run and a new one is created
-                File runcount = new File("timesRan.txt");
-                if (runcount.exists()) {
-                    BufferedReader in = new BufferedReader(new FileReader(runcount));
-                    int numberfromtimesRan = Integer.parseInt(in.readLine());
-                    out = new PrintWriter("logs"+numberfromtimesRan+".txt");
-                    BufferedWriter writetotimesran = new BufferedWriter(new FileWriter("timesRan.txt"));
-                    writetotimesran.write(numberfromtimesRan + 1);
-                } else {
-                    out = new PrintWriter("logs.txt");
-                }
-                pwloop = false;
-            } catch (IOException e) {
-                System.out.println(Errors[0]);
-            }
-        }
+
+        // exists so that the logs.txt file isn't overwritten on every run and a new one is created
+
+        CreatetimesRan(Errors);
+        BufferedReader in = new BufferedReader(new FileReader("timesRan.txt"));
+        String line = in.readLine();
+        BufferedWriter out = new BufferedWriter(new FileWriter("logs" + line + ".txt", false));
+
+
+
         CreatePackagesDirectory(UserName);
         CreateDefaultSources(Errors, out, LogErrors);
 
@@ -207,7 +232,6 @@ public class Main {
                 String fileName = programFileName(thisFilename);
                 Download(url, fileName, UserName, out, Errors, LogErrors);
                 System.out.println("\n \n \n ");
-                out.close();
             } else if (selected == 1) {
                 // section that handles removing packages
                 for(int i=0;i<=countItemsInFolder(UserName)-1;) {
@@ -222,18 +246,21 @@ public class Main {
                     // deletes entire contents of packages folder
                     DeleteFiles(UserName, out, Errors, LogErrors);
                     System.out.println("All files deleted");
-                    out.println("All files deleted successfully");
+                    out.write("All files deleted successfully");
+                    out.newLine();
                     System.out.println("\n \n \n ");
-                    out.close();
                 } else {
                     String FileNameToDelete = FileNames(UserName).get(deleteSelected-1);
                         // deletes file selected
                         try {
                             FileUtils.delete(new File("/users/"+UserName+"/Documents/Packages/" + FileNameToDelete));
                             System.out.println(FileNameToDelete + " Deleted successfully");
+                            out.write(FileNameToDelete + "Deleted successfully");
+                            out.newLine();
                         } catch (IOException e) {
                             System.out.println(Errors[1] + e.toString());
-                            out.println(LogErrors[2] + e.toString());
+                            out.write(LogErrors[2] + e.toString());
+                            out.newLine();
                         }
                     }
 
