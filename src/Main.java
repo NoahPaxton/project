@@ -81,26 +81,24 @@ public class Main {
         return thisList;
     }
 
-    public static void displaySource(source thisSource){
-        System.out.format("%s %n",thisSource.program);
-    }
-
-
     public static String selectURL(source thisURL){
+        // this returns the url to download from
         return thisURL.URL;
     }
 
     public static String programFileName(source thisFilename){
-        //merge this into selectURL?
+        //this returns the program filename
         return thisFilename.program;
     }
 
 
     public static int countItemsInFolder(String UserName){
+        // This returns how many files are in the packages folder
         return Objects.requireNonNull(new File("/users/" + UserName + "/Documents/Packages/").list()).length;
     }
 
     public static void DeleteFiles(String UserName, PrintWriter out, String[] Errors, String[] LogErrors){
+        // This deletes all files and folders in the Packages folder
         boolean i = true;
         while (i==true) {
             try {
@@ -116,6 +114,7 @@ public class Main {
 
 
     public static List<String> FileNames(String UserName) {
+        // This gets the filenames and folder names of things inside the packages folder
             return Stream.of(Objects.requireNonNull(new File("/users/" + UserName + "/Documents/Packages/").listFiles()))
                     .map(File::getName)
                     .collect(Collectors.toList());
@@ -123,6 +122,7 @@ public class Main {
 
 
     public static void CreatePackagesDirectory (String UserName) {
+        // This creates the Packages directory in the users documents if it doesnt exist.
         File directory = new File("/users/" + UserName + "/Documents/Packages/");
         if (!directory.exists()) {
             directory.mkdir();
@@ -130,6 +130,7 @@ public class Main {
     }
 
     public static void CreateDefaultSources (String[] Errors, PrintWriter out, String[] LogErrors) {
+        // This creates the default sources file if it doesnt exist.
         File sources = new File("Sources.txt");
         if (!sources.exists()) {
             try {
@@ -152,23 +153,23 @@ public class Main {
 
 
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
+
+        // These arrays store error messages for errors printed to screen and errors written to the logs.txt file(s)
         String[] Errors = {"File Wasn't Found. or there was an error parsing the timesRan file. make sure timesRan only contains an integer or delete the timesRan file(s) ",
                 "There was an error finding the selected file ","Folder could not be deleted. it may not exist ", "Error occurred reading file. Please make sure the file structure is correct.",
                 "There was an error downloading the file, please try again. ", "input was incorrect, please try again.  "};
 
-
         String[] LogErrors = {"Error deleting folder. It might not exist. ","Incorrect Input Error ","File wasn't found. ","Error while downloading file ", "Error while loading sources file. Please Make sure it exists. "};
 
+        // String that gets the username of the user
         String UserName = System.getProperty("user.name");
-
-
-
 
         PrintWriter out = null;
         boolean pwloop = true;
         while (pwloop==true) {
             try {
+                // exists so that the logs.txt file isn't overwritten on every run and a new one is created
                 File runcount = new File("timesRan.txt");
                 if (runcount.exists()) {
                     BufferedReader in = new BufferedReader(new FileReader(runcount));
@@ -193,9 +194,10 @@ public class Main {
             System.out.format(" Package Manager %n 0) Install Package %n 1) Remove Package and/or files %n 2) exit %n");
             int selected = option(out, Errors, LogErrors);
             if (selected == 0) {
+                // section that handles installing packages
                 for(int i=0;i<thisList.size();i++) {
                     source thisSource = thisList.get(i);
-                    displaySource(thisSource);
+                    System.out.format("%d) %s %n", i, programFileName(thisSource));
                 }
 
                 int urlselected = option(out, Errors, LogErrors);
@@ -205,10 +207,10 @@ public class Main {
                 String fileName = programFileName(thisFilename);
                 Download(url, fileName, UserName, out, Errors, LogErrors);
                 System.out.println("Download completed successfully");
-                Runtime.getRuntime().exec("cls");
+                System.out.println("\n \n \n ");
                 out.close();
             } else if (selected == 1) {
-
+                // section that handles removing packages
                 for(int i=0;i<=countItemsInFolder(UserName)-1;) {
                     System.out.format("%d) %s %n", (i + 1), FileNames(UserName).get(i));
                     i++;
@@ -218,14 +220,15 @@ public class Main {
                 int deleteSelected = option(out, Errors, LogErrors);
 
                 if (deleteSelected == (countItemsInFolder(UserName) + 1)) {
+                    // deletes entire contents of packages folder
                     DeleteFiles(UserName, out, Errors, LogErrors);
                     System.out.println("All files deleted");
                     out.println("All files deleted successfully");
+                    System.out.println("\n \n \n ");
                     out.close();
-                    Runtime.getRuntime().exec("cls");
                 } else {
                     String FileNameToDelete = FileNames(UserName).get(deleteSelected-1);
-
+                        // deletes file selected
                         try {
                             FileUtils.delete(new File("/users/"+UserName+"/Documents/Packages/" + FileNameToDelete));
                             System.out.println(FileNameToDelete + " Deleted successfully");
@@ -237,6 +240,7 @@ public class Main {
 
 
             } else {
+                // section that handles quitting the program
                 out.close();
                 System.exit(0);
             }
