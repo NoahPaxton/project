@@ -201,8 +201,7 @@ public class Main {
         String UserName = System.getProperty("user.name");
 
 
-        // exists so that the logs.txt file isn't overwritten on every run and a new one is created
-
+        // This creates the logs file using the number from timesRan
         CreatetimesRan(Errors);
         BufferedReader in = new BufferedReader(new FileReader("timesRan.txt"));
         String line = in.readLine();
@@ -255,7 +254,7 @@ public class Main {
                         try {
                             FileUtils.delete(new File("/users/"+UserName+"/Documents/Packages/" + FileNameToDelete));
                             System.out.println(FileNameToDelete + " Deleted successfully");
-                            out.write(FileNameToDelete + "Deleted successfully");
+                            out.write(FileNameToDelete + " Deleted successfully");
                             out.newLine();
                         } catch (IOException e) {
                             System.out.println(Errors[1] + e.toString());
