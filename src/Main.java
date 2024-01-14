@@ -60,7 +60,7 @@ public class Main {
     }
 
     public static ArrayList<source> loadFile(String filename, BufferedWriter out, String[] Errors, String[] LogErrors) throws IOException {
-        // This loads the sources file into an arraylist.
+        // This loads the Sources.txt file into an ArrayList.
         List<String> SourceDetails;
         ArrayList<source> thisList = new ArrayList<>();
         boolean i = true;
