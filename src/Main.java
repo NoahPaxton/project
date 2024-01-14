@@ -229,12 +229,20 @@ public class Main {
                 }
 
                 int urlselected = option(out, Errors, LogErrors);
-                source thisURL = thisList.get(urlselected);
-                String url = selectURL(thisURL);
-                source thisFilename = thisList.get(urlselected);
-                String fileName = programFileName(thisFilename);
-                Download(url, fileName, UserName, out, Errors, LogErrors);
-                System.out.println("\n \n \n ");
+                try {
+                    source thisURL = thisList.get(urlselected);
+                    String url = selectURL(thisURL);
+                    source thisFilename = thisList.get(urlselected);
+                    String fileName = programFileName(thisFilename);
+                    Download(url, fileName, UserName, out, Errors, LogErrors);
+                    System.out.println("\n \n \n ");
+                } catch (IndexOutOfBoundsException e){
+                    System.out.println(Errors[5] + e.toString());
+                    out.write(LogErrors[1] + e.toString());
+                    out.newLine();
+
+                }
+
             } else if (selected == 1) {
                 // section that handles removing packages
                 for(int i=0;i<=countItemsInFolder(UserName)-1;) {
