@@ -38,7 +38,7 @@ public class Main {
 
     public static void Download(String url, String fileName, String UserName, BufferedWriter out, String[] Errors, String[] LogErrors) throws RuntimeException, IOException {
         // This will download the file from the url passed through and name the file after the filename passed through.
-        // Files must be an exe since it appeneds .exe to the end of the filename so it is executable.
+        // Files must be an exe since it appends .exe to the end of the filename so it is executable.
         boolean i = true;
         while (i==true) {
             try {
