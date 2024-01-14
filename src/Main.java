@@ -1,6 +1,6 @@
 // Naming conventions:
 //  out = log file bufferedwriter
-//  in = timesRan.txt bufferedreader
+//  in  = timesRan.txt bufferedreader
 //  everything else is named literal for what it does to make it easy for me to follow what I was doing.
 
 
@@ -18,7 +18,7 @@ import java.util.stream.Stream;
 public class Main {
 
     public static int option(BufferedWriter out, String[] Errors, String[] LogErrors) throws IOException {
-        // This will ask the user for an input and validate it before returing it
+        // This will ask the user for an input and validate it before returning it
         boolean i = true;
         Scanner input = new Scanner(System.in);
         int valueint=0;
@@ -160,7 +160,7 @@ public class Main {
 
     }
 
-    public static void CreatetimesRan (String[] Errors)  {
+    public static void CreatetimesRan (String[] Errors) throws NumberFormatException {
         // This creates the timesRan file if it doesn't exist or adds to it.
         File timesran = new File("timesRan.txt");
         if (!timesran.exists()) {
