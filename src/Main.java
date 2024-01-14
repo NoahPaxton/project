@@ -18,7 +18,7 @@ import java.util.stream.Stream;
 public class Main {
 
     public static int option(BufferedWriter out, String[] Errors, String[] LogErrors) throws IOException {
-        // This will ask the user for an input and validate it before returning it
+        // This will ask the user for an integer input and validate it before returning it
         boolean i = true;
         Scanner input = new Scanner(System.in);
         int valueint=0;
