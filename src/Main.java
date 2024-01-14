@@ -111,7 +111,7 @@ public class Main {
             try {
                 FileUtils.cleanDirectory(new File("/users/" + UserName + "/Documents/Packages"));
                 i = false;
-            } catch (IOException e) {
+            } catch (IndexOutOfBoundsException e) {
                 System.out.println( Errors[2] + e.toString());
                 out.write( LogErrors[0] + e.toString());
                 out.newLine();
@@ -252,16 +252,16 @@ public class Main {
                     out.write("All files deleted successfully");
                     out.newLine();
                 } else {
-                    String FileNameToDelete = FileNames(UserName).get(deleteSelected);
                         // deletes file selected
                         try {
+                            String FileNameToDelete = FileNames(UserName).get(deleteSelected);
                             FileUtils.delete(new File("/users/"+UserName+"/Documents/Packages/" + FileNameToDelete));
                             System.out.println(FileNameToDelete + " Deleted successfully \n \n \n ");
                             out.write(FileNameToDelete + " Deleted successfully");
                             out.newLine();
-                        } catch (IOException e) {
-                            System.out.println(Errors[1] + e.toString());
-                            out.write(LogErrors[2] + e.toString());
+                        } catch (IndexOutOfBoundsException e) {
+                            System.out.println(Errors[5] + e.toString());
+                            out.write(LogErrors[1] + e.toString());
                             out.newLine();
                         }
                     }
