@@ -1,7 +1,8 @@
 // Naming conventions:
-//  out = log file bufferedwriter
-//  in  = timesRan.txt bufferedreader
-//  everything else is named literal for what it does to make it easy for me to follow what I was doing.
+//  out = log file BufferedWriter.
+//  in  = timesRan.txt BufferedReader.
+//  i = Used for counting.
+//  Everything else is named literally for what it does to make it easy for me to follow what I was doing.
 
 
 import org.apache.commons.io.FileUtils;
@@ -89,23 +90,23 @@ public class Main {
     }
 
     public static String selectURL(source thisURL){
-        // this returns the url to download from
+        //  This returns the corresponding ArrayList URL entry.
         return thisURL.URL;
     }
 
     public static String programFileName(source thisFilename){
-        //this returns the program filename
+        //  Returns the corresponding ArrayList filename entry.
         return thisFilename.program;
     }
 
 
     public static int countItemsInFolder(String UserName){
-        // This returns how many files are in the packages folder
+        // This returns how many files are in the Packages folder.
         return Objects.requireNonNull(new File("/users/" + UserName + "/Documents/Packages/").list()).length;
     }
 
     public static void DeleteFiles(String UserName, BufferedWriter out, String[] Errors, String[] LogErrors) throws IOException {
-        // This deletes all files and folders in the Packages folder
+        // This deletes all files and folders in the Packages folder.
         boolean i = true;
         while (i==true) {
             try {
@@ -122,7 +123,7 @@ public class Main {
 
 
     public static List<String> FileNames(String UserName) {
-        // This gets the filenames and folder names of things inside the packages folder
+        // This gets the filenames and folder names of things inside the packages folder.
             return Stream.of(Objects.requireNonNull(new File("/users/" + UserName + "/Documents/Packages/").listFiles()))
                     .map(File::getName)
                     .collect(Collectors.toList());
@@ -130,7 +131,7 @@ public class Main {
 
 
     public static void CreatePackagesDirectory (String UserName) {
-        // This creates the Packages directory in the users documents if it doesnt exist.
+        // This creates the Packages directory in the users documents if it doesn't exist.
         File directory = new File("/users/" + UserName + "/Documents/Packages/");
         if (!directory.exists()) {
             directory.mkdir();
@@ -138,7 +139,7 @@ public class Main {
     }
 
     public static void CreateDefaultSources (String[] Errors, BufferedWriter out, String[] LogErrors) throws IOException {
-        // This creates the default sources file if it doesnt exist.
+        // This creates the default Sources.txt file if it doesn't exist.
         File sources = new File("Sources.txt");
         if (!sources.exists()) {
             try {
@@ -161,7 +162,7 @@ public class Main {
     }
 
     public static void CreatetimesRan (String[] Errors) throws NumberFormatException {
-        // This creates the timesRan file if it doesn't exist or adds to it.
+        // This creates the timesRan.txt file if it doesn't exist or adds to it.
         File timesran = new File("timesRan.txt");
         if (!timesran.exists()) {
             try {
@@ -219,7 +220,7 @@ public class Main {
         ArrayList<source> thisList = loadFile("Sources.txt", out, Errors, LogErrors);
         boolean executeprogram = true;
         while (executeprogram==true) {
-            System.out.format(" Package Manager %n 0) Install Package %n 1) Remove Package and/or files %n 2) exit %n");
+            System.out.format(" Package Manager %n 0) Install Package %n 1) Remove Package and/or files %n 2) Exit %n");
             int selected = option(out, Errors, LogErrors);
             if (selected == 0) {
                 // section that handles installing packages
