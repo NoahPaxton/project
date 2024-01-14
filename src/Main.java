@@ -1,4 +1,8 @@
-// Add comments
+// Naming conventions:
+//  out = log file bufferedwriter
+//  in = timesRan.txt bufferedreader
+//  everything else is named literal for what it does to make it easy for me to follow what I was doing.
+
 
 import org.apache.commons.io.FileUtils;
 
